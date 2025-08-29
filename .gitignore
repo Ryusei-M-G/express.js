@@ -1,0 +1,31 @@
+
+# 特定のファイルを無視
+.env             
+*.log            
+temp.txt         
+
+# 特定のディレクトリを無視
+node_modules/    
+dist/            
+build/           
+
+*.zip
+*.rar
+*.exe
+
+
+empty_dir/*
+
+!dist/index.html
+
+my_secret_folder/
+
+.DS_Store
+
+.vscode/        # VS Codeの設定ディレクトリ (チームで共有しない場合)
+*.swp           # Vimのスワップファイル
+*~              # Emacsのバックアップファイル
+
+.cache/
+npm-debug.log*  # npmのデバッグログ (古いnpmの場合)
+yarn-error.log  # Yarnのエラーログ
