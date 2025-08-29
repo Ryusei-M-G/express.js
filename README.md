@@ -1,1 +1,1 @@
-### express.jsを仕様したAPIサーバーテスト
+### express.jsを使用したAPIサーバーテスト
