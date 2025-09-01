@@ -8,11 +8,7 @@ const client = new Client({
   database: 'postgres',
 });
 
-const insertQuery = `
-    INSERT INTO tables (users, text) 
-    VALUES ($1, $2)
-    ON CONFLICT (users) DO NOTHING;
-`;
+
 
 const dbConnection = async () => {
   try {
@@ -29,6 +25,34 @@ const dbConnection = async () => {
   }
 }
 
-dbConnection();
+const dbAdd = async(value1,value2) =>{
+  const insertQuery = `
+    INSERT INTO tables (users, text) 
+    VALUES ($1, $2)
+    ON CONFLICT (users) DO NOTHING;
+`;
+const values = [value1,value2];
+  try{
+    await client.connect();
+    await client.query(insertQuery,values);
+    console.log('add db');
+  }catch(err){
+    console.log(err);
+  }finally{
+    await client.end();
+  }
+}
+const dbFetch = async()=>{
+  try{
+    await client.connect();
+    //selectのquery後で書く
+  }catch(err){
+    console.log(err);
+  }finally{
+    await client.end();
+  }
+}
+
+dbAdd('user2','test');
 
 export default dbConnection;
