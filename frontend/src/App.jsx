@@ -34,7 +34,7 @@ function App() {
   }, []);
 
   return (
-    <div className='text-center'>
+    <div className='text-center color=011'>
       <button className='border rounded-2xl p-2 m-4' onClick={eventHandle}>button</button>
       <div className='border rounded-2xl p-4 m-4'>
         <p className='text-2xl'>温度: {data.temp} ℃</p>
