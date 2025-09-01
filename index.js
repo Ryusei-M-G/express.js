@@ -1,8 +1,9 @@
 import express from 'express'
 import 'dotenv/config';
-
+import cors from'cors'
 const app = express();
 
+app.use(cors());
 const API_KEY = process.env.OPENWEATHER_API_KEY;
 const CITY_NAME = 'Tokyo';
 
@@ -18,7 +19,7 @@ const fetchWeather = async () => {
       const temp = data.main.temp;
       const description = data.weather[0].description;
       const humidity = data.main.humidity;
-      return `temp:${temp} | description:${description} | humidity:${humidity}`;
+      return { temp, description, humidity };
     } else {
       return 'failed'
     }
@@ -37,10 +38,10 @@ app.use(middleware);//middlewareの登録
 //middlewareはhttpリクエストの度に呼び出される
 
 app.get('/', async (req, res) => { 
-  const weatherMessage = await fetchWeather(); 
-  res.send(`現在の天気: ${weatherMessage}`); 
+  const weatherData = await fetchWeather(); 
+  res.json(weatherData);
 
-  console.log(`クライアントへ送信: ${weatherMessage}`);
+  console.log(`クライアントへ送信: ${weatherData}`);
 });
 
 app.listen(3000, () => {
