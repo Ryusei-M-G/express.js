@@ -1,8 +1,7 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-import dbConnection from './dbcon';
-
+import pool,  { dbAdd,dbFetch } from './dbcon';
 const app = express();
 
 app.use(cors());

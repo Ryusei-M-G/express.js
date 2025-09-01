@@ -13,7 +13,7 @@ const pool = new Pool({
 
 
 
-const dbAdd = async (value1, value2) => {
+export const dbAdd = async (value1, value2) => {
   const insertQuery = `
     INSERT INTO tables (users, text) 
     VALUES ($1, $2)
@@ -27,15 +27,21 @@ const dbAdd = async (value1, value2) => {
     console.log(res.rows[0]);
     return res.rows[0];
   } catch (err) {
-    console.error(err);
+    console.error('log:',err);
     // エラーを呼び出し元に伝えるために再スローする
     throw err;
   }
 }
-const dbFetch = async () => {
-
-  //selectのquery後で書く
-
+export const dbFetch = async () => {
+  const selectQuery = 'SELECT * FROM tables ORDER BY created_at DESC;';
+  try {
+    const res = await pool.query(selectQuery);
+    console.log(`log: fetch ${res.rowCount} data`);
+    return res.rows;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
-dbAdd('user2', 'test');
+export default pool;
