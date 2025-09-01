@@ -1,58 +1,41 @@
-import { Client } from 'pg';
+import { Pool } from 'pg';
 
-const client = new Client({
+const pool = new Pool({
   host: 'localhost',
   port: 5432,
   user: 'postgres',
   password: '1234',
   database: 'postgres',
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
 
 
-const dbConnection = async () => {
-  try {
-    await client.connect();
-    console.log('sucsess connection');
-    const values = ['sample user', 'sample text'];
-      await client.query(insertQuery, values);
-
-  } catch (err) {
-    console.log(err);
-  } finally {
-    await client.end();
-    console.log('disconnect');
-  }
-}
-
-const dbAdd = async(value1,value2) =>{
+const dbAdd = async (value1, value2) => {
   const insertQuery = `
     INSERT INTO tables (users, text) 
     VALUES ($1, $2)
-    ON CONFLICT (users) DO NOTHING;
+    RETURNING *;
 `;
-const values = [value1,value2];
-  try{
-    await client.connect();
-    await client.query(insertQuery,values);
-    console.log('add db');
-  }catch(err){
-    console.log(err);
-  }finally{
-    await client.end();
+  const values = [value1, value2];
+  try {
+    // プールからクライアントを取得し、クエリを実行し、クライアントをプールに返す
+    // pool.query() がこれらすべてを自動で行ってくれる
+    const res = await pool.query(insertQuery, values);
+    console.log(res.rows[0]);
+    return res.rows[0];
+  } catch (err) {
+    console.error(err);
+    // エラーを呼び出し元に伝えるために再スローする
+    throw err;
   }
 }
-const dbFetch = async()=>{
-  try{
-    await client.connect();
-    //selectのquery後で書く
-  }catch(err){
-    console.log(err);
-  }finally{
-    await client.end();
-  }
+const dbFetch = async () => {
+
+  //selectのquery後で書く
+
 }
 
-dbAdd('user2','test');
-
-export default dbConnection;
+dbAdd('user2', 'test');
