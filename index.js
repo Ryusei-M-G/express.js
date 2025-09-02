@@ -1,10 +1,11 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-import pool,  { dbAdd,dbFetch } from './dbcon';
+import pool, { dbAdd,dbFetch } from './dbcon.js';
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 const API_KEY = process.env.OPENWEATHER_API_KEY;
 const CITY_NAME = 'Tokyo';
 
@@ -38,11 +39,29 @@ const middleware = (req, res, next) => {
 app.use(middleware);//middlewareの登録
 //middlewareはhttpリクエストの度に呼び出される
 
-app.get('/', async (req, res) => { 
-  const weatherData = await fetchWeather(); 
+app.get('/', async (req, res) => {
+  const weatherData = await fetchWeather();
   res.json(weatherData);
 
   console.log(`クライアントへ送信: ${weatherData}`);
+});
+
+app.get('/', async (req, res) => {
+  const weatherData = await fetchWeather();
+  res.json(weatherData);
+
+  console.log(`クライアントへ送信: ${weatherData}`);
+});
+
+app.post('/add', async (req, res) => {
+  const receivedData = req.body;
+  console.log('クライアントから受信したデータ:', receivedData);
+  dbAdd(receivedData.item1,receivedData.item2);
+
+  // res.status(201).json({ 
+  //   message: 'データの追加に成功しました',
+  //   data: receivedData 
+  // });
 });
 
 app.listen(3000, () => {
