@@ -1,5 +1,7 @@
 import { useState, useEffect, } from 'react'
 import './App.css'
+import Temp from './temp';
+import Form from './Form';
 
 function App() {
   const [, setError] = useState();
@@ -29,6 +31,39 @@ function App() {
     fetchData();
   }
 
+  const handleAdd =async(value1,value2) =>{
+    const postData ={
+      item1:value1,
+      item2:value2,
+    };
+
+    setIsLoading(true);
+    setError(null);
+
+    try{
+      const res = await fetch(`${serverUrl}/add`,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+      if(!res.ok){
+        throw new Error('HTTPerror',res.status);
+      }
+
+      const result = await res.json();
+      console.log(`res: ${result}`);
+
+      fetchData();
+    }catch(e){
+      setError(e.message);
+      console.log(`erroe:${e}`);
+    }finally{
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -36,11 +71,9 @@ function App() {
   return (
     <div className='text-center color=011'>
       <button className='border rounded-2xl p-2 m-4' onClick={eventHandle}>button</button>
-      <div className='border rounded-2xl p-4 m-4'>
-        <p className='text-2xl'>温度: {data.temp} ℃</p>
-        <p>天気: {data.description}</p>
-        <p>湿度: {data.humidity} %</p>
-      </div>
+      <Temp data={data}></Temp>
+      <Form onAdd={handleAdd}></Form>
+      
     </div>
   );
 }
