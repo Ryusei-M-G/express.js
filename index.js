@@ -39,18 +39,17 @@ const middleware = (req, res, next) => {
 app.use(middleware);//middlewareの登録
 //middlewareはhttpリクエストの度に呼び出される
 
-app.get('/', async (req, res) => {
+app.get('/wt', async (req, res) => {
   const weatherData = await fetchWeather();
   res.json(weatherData);
 
   console.log(`クライアントへ送信: ${weatherData}`);
 });
 
-app.get('/', async (req, res) => {
-  const weatherData = await fetchWeather();
-  res.json(weatherData);
-
-  console.log(`クライアントへ送信: ${weatherData}`);
+app.get('/db', async (req, res) => {
+  const dbData = await dbFetch();
+  res.json(dbData);
+  console.log(`クライアントへ送信: ${dbData}`);
 });
 
 app.post('/add', async (req, res) => {

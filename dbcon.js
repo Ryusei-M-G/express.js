@@ -37,6 +37,7 @@ export const dbFetch = async () => {
   try {
     const res = await pool.query(selectQuery);
     console.log(`log: fetch ${res.rowCount} data`);
+    console.log(`log: ${res.rows}`);
     return res.rows;
   } catch (err) {
     console.error(err);
