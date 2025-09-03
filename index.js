@@ -57,20 +57,13 @@ app.post('/add', async (req, res) => {
   console.log('クライアントから受信したデータ:', receivedData);
   dbAdd(receivedData.item1,receivedData.item2);
 
-  // res.status(201).json({ 
-  //   message: 'データの追加に成功しました',
-  //   data: receivedData 
-  // });
+
 });
 app.post('/del', async (req, res) => {
   const receivedData = req.body;
   console.log('クライアントから受信したデータ:', receivedData);
   dbDel(receivedData.id);
 
-  // res.status(201).json({ 
-  //   message: 'データの追加に成功しました',
-  //   data: receivedData 
-  // });
 });
 
 app.listen(3000, () => {
