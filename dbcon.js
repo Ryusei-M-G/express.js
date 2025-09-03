@@ -32,6 +32,22 @@ export const dbAdd = async (value1, value2) => {
     throw err;
   }
 }
+
+export const dbDel = async(id) =>{
+  const deleteQuery = 'DELETE FROM tables WHERE id = $1 RETURNING *;';
+
+try {
+    // プールからクライアントを取得し、クエリを実行し、クライアントをプールに返す
+    // pool.query() がこれらすべてを自動で行ってくれる
+    const res = await pool.query(deleteQuery, [id]);
+    console.log(res.rows[0]);
+    return res.rows[0];
+  } catch (err) {
+    console.error('log:',err);
+    // エラーを呼び出し元に伝えるために再スローする
+    throw err;
+  }
+}
 export const dbFetch = async () => {
   const selectQuery = 'SELECT * FROM tables ORDER BY created_at DESC;';
   try {

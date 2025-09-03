@@ -9,6 +9,7 @@ function App() {
   const [serverUrl,] = useState('http://localhost:3000');
   const [data, setData] = useState('sample text');
   const [DBData, setDBData] = useState([]);
+  const [idText, setIdText] = useState('');
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -65,6 +66,42 @@ function App() {
     }
   }
 
+  const delHandle = async(id) =>{
+     const postData = {
+      id: id
+    };
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`${serverUrl}/del`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+      if (!res.ok) {
+        throw new Error('HTTPerror', res.status);
+      }
+
+      const result = await res.json();
+      console.log(`res: ${result}`);
+
+      fetchData();
+    } catch (e) {
+      setError(e.message);
+      console.log(`erroe:${e}`);
+    } finally {
+      setIsLoading(false);
+      fetchhandle();
+    }
+  }
+  const delClickHandle = ()=>{
+    delHandle(idText);
+  }
+
   const fetchhandle = async () => {
     setIsLoading(true);
     setError(null);
@@ -93,11 +130,16 @@ function App() {
       <Temp data={data}></Temp>
       <Form onAdd={handleAdd}></Form>
       <button type="button" className="cursor-grab border rounded-2xl pr-4 pl-4 p-1  text-2xl" onClick={fetchhandle}>fetch</button>
-      <div>{DBData.map((e)=>{
-        return(<li key={e.id}>
+      <div>{DBData.map((e) => {
+        return (<li key={e.id}>
           ID: {e.id} - Item1: {e.users}, Item2: {e.text}
-        </li>); 
+        </li>);
       })}</div>
+
+      <div>
+        <input className='border p-2' placeholder='id' onChange={(e) => setIdText(e.target.value)}></input>
+        <button type='button' className='border p-2' onClick={delClickHandle}>del</button>
+      </div>
     </div>
   );
 }
